@@ -1,0 +1,43 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+vendor/
+/gromit
+.terraform/
+terraform.tfstate
+*.plan
+rice-box.go
+dist/
+/testdata/config/
+/server/debug/debugger.wasm
+/tyk/
+/tyk-analytics/
+/tyk-pump/
+/tyk-sink/
+/tyk-identity-broker/
+/portal/
+
+# VScode
+*.vscode*
+
+# Terraform
+errored.tfstate
+.terraform.lock*
+gpac/**
+__pycache__
+/error.yaml
+/body.md
+/prod-variations.yml
+/tyk-pro/
+/backup

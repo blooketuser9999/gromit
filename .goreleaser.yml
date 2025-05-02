@@ -1,0 +1,57 @@
+# Make sure to check the documentation at http://goreleaser.com
+
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - binary: gromit
+    env:
+      - CGO_ENABLED=0
+    goarch:
+      - amd64
+      - arm64
+    goos:
+      - linux
+      - darwin
+    ldflags:
+      - -X github.com/notableimmor/gromit/util.version={{.Version}}
+      - -X github.com/notableimmor/gromit/util.commit={{.Commit}}
+      - -X github.com/notableimmor/gromit/util.buildDate={{.Date}}
+    mod_timestamp: '{{ .CommitTimestamp }}'
+
+dockers:
+  - image_templates:
+      - "tykio/gromit:latest"
+      - "tykio/gromit:v{{ .Major }}.{{ .Minor }}{{.Prerelease}}"
+      - "tykio/gromit:{{.Tag}}"
+    use: buildx
+    dockerfile: Dockerfile
+    build_flag_templates:
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^utils:'
+    - (?i)typo
+    - 'Merge (pull request|branch)'
+    - '\[CI\]'
+    - '(?i)\[Buddy\]'
+    - 'cherry picked'
+    - '^rel-eng:'
+    - '^minor:'
+
+release:
+  github:
+    owner: TykTechnologies
+    name: gromit
+  discussion_category_name: General
+  prerelease: auto
+  name_template: "{{.ProjectName}}-v{{.Version}}"

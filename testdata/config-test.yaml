@@ -1,0 +1,69 @@
+policy:
+  deletedfiles:
+    - a_deleted.file
+  groups:
+    grp0:
+      features:
+        - a
+      builenv: wrong
+      repos:
+        # Use this repo to test features
+        repo0:
+          buildenv: stillwrong
+          configfile: repo0.conf
+          features:
+            - b
+          branches:
+            main:
+              buildenv: right
+              features:
+                - c
+                - d
+            dev:
+              buildenv: stillright
+              features:
+                - e
+                - f
+        # Use this to test builds 
+        repo1:
+          buildenv: wrong
+          builds:
+            std:
+              flags:
+                - flagstd1
+              buildpackagename: repo1-pkg
+              dhrepo: repo1-doc-wrong
+              archs:
+                - go: go1
+                  deb: deb1
+                  docker: doc1
+            std2:
+              flags:
+                - flag2
+          branches:
+            main:
+              buildenv: right
+              features:
+                - e
+              builds:
+                std:
+                  flags:
+                    - flagstd2
+                  dhrepo: repo1-doc-right
+                  archs:
+                    - go: go2
+                      deb: deb2
+                      docker: doc2
+                std2:
+                  buildpackagename: repo1-std2
+    grp1:
+      features:
+        - a
+      builenv: maybe
+      repos:
+        repo3:
+          branches:
+            master:
+              builds:
+                std3:
+                  buildpackagename: repo3-std3

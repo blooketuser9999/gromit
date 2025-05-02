@@ -1,0 +1,36 @@
+$ setenv REPO tyk
+$ setenv TAGS v1.0
+$ setenv IS_PR yes
+$ setenv BASE_REF main
+$ setenv JOB api
+$ gromit policy controller --loglevel error
+versions<<EOF
+tyk_image=$ECR/tyk-ee:master
+tyk_analytics_image=$ECR/tyk-analytics:master
+tyk_pump_image=$ECR/tyk-pump:master
+tyk_sink_image=$ECR/tyk-sink:master
+# override default above with just built tag
+tyk_image=v1.0
+# alfa and beta have to come after the override
+tyk_alfa_image=$tyk_image
+tyk_beta_image=$tyk_image
+EOF
+gd_tag=master
+api_cache_db<<EOF
+["redis7"]
+EOF
+api_conf<<EOF
+["sha256","murmur128"]
+EOF
+api_db<<EOF
+["mongo7","postgres15"]
+EOF
+pump<<EOF
+["$ECR/tyk-pump:master"]
+EOF
+sink<<EOF
+["$ECR/tyk-sink:master"]
+EOF
+exclude<<EOF
+[{"conf":"murmur128","db":"mongo7"},{"conf":"sha256","db":"postgres15"}]
+EOF
